@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.iakstudios.app.chaletIn.signup_page">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="67dp"
+        android:layout_gravity="center"
+        android:background="@color/chela_red"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        android:weightSum="1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="شاشة التسجيل"
+            android:textColor="#fff"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginRight="20dp"/>
+
+    </android.support.v7.widget.Toolbar>
+    <LinearLayout
+        android:id="@+id/linearname"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/button_back2"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/edit_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:hint="الاسم الكامل"
+            android:inputType="textPersonName"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/viewname"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+
+        <ImageView
+
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/person_gray" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearemail"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_back2"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/edit_email"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+
+            android:textSize="12sp"
+            android:hint="البريد الالكتروني"
+            android:inputType="textEmailAddress"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/viewemail"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+
+        <ImageView
+
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/email_gray" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearpass"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_back2"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/edit_pass"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:hint="كلمة المرور"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/viewpass"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+
+        <ImageView
+
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/key_gray" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearre_pass"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_back2"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/edit_repass"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:hint="تاكيد كلمة المرور"
+            android:inputType="textPassword"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/viewre_pass"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+
+        <ImageView
+
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/key_gray" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lineaphone"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button_back2"
+        android:orientation="horizontal"
+        >
+
+        <EditText
+            android:id="@+id/edit_phone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:hint="رقم الجوال"
+            android:inputType="phone"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/viewphone"
+            android:layout_width="0.5dp"
+            android:layout_height="match_parent"
+            android:background="#000000" />
+
+
+        <ImageView
+
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:src="@drawable/call_icon" />
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/purpos"
+        android:layout_width="match_parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="18dp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:text="حدد هدفك من التسجيل"/>
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layoutDirection="rtl"
+        android:layout_marginTop="5dp"
+        android:layout_height="wrap_content"
+
+        >
+        <RadioButton
+            android:id="@+id/searcher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="باحث عن شالية"
+            android:textSize="18dp"
+            android:layout_marginLeft="17dp"
+            />
+
+        <RadioButton
+            android:id="@+id/owner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="صاحب شالية"
+            android:textSize="18dp"
+            />
+
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_signup"
+        android:layout_width="200dp"
+        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+
+        android:background="@drawable/button_next"
+        android:selectAllOnFocus="true"
+        android:text="تسجيل حساب جديد"
+        android:layout_gravity="center_horizontal"
+        android:textColor="#fff"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+</LinearLayout>
