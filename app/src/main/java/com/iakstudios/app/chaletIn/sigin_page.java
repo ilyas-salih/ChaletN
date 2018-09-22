@@ -14,7 +14,7 @@ public class sigin_page extends AppCompatActivity {
     }
 
     public void Goregister(View view) {
-        Intent intent=new Intent(sigin_page.this,signup_page.class);
+        Intent intent=new Intent(sigin_page.this, MainActivity.class);
         startActivity(intent);
     }
 }
