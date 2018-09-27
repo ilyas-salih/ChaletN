@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    app:cardPreventCornerOverlap="true"
+    android:orientation="vertical"
+    app:cardElevation="5dp"
+    android:id="@+id/custom_home"
+    >
+
+    <LinearLayout
+        android:id="@+id/index"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/head"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/price_info"
+                android:layout_width="2dp"
+                android:padding="3dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center"
+                android:layout_weight="0.59"
+                android:background="@drawable/price_btn"
+                android:gravity="center"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:text="450 ريال"
+                android:textColor="#fff"
+                android:textSize="15dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/chela_name"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textSize="16dp"
+                android:textStyle="bold"
+                android:text="شاليه ريبان "
+                android:textColor="#000"
+                />
+
+
+
+        </LinearLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/bod"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="4">
+
+
+            <ImageView
+                android:id="@+id/chela_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/home_image" />
+
+            <TextView
+                android:id="@+id/card_type_txt"
+                android:layout_width="74dp"
+                android:layout_height="30dp"
+                android:background="@drawable/price_btn"
+                android:gravity="center"
+                android:text="عائلة"
+                android:textColor="#fff"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.944"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.051" />
+        </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/foot"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:id="@+id/location_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="الشرقية"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/location_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/home_icon_location" />
+
+            <TextView
+                android:id="@+id/people_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="411"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/people_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/home_icon_people" />
+
+            <TextView
+                android:id="@+id/bath_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="24"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/bath_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/home_icon_bath" />
+
+            <TextView
+                android:id="@+id/bed_txt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="57"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/bed_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:srcCompat="@drawable/home_icon_bed" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

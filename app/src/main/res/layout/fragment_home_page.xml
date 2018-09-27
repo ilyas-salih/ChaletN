@@ -4,7 +4,17 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    android:background="#b26464"
     tools:context="com.iakstudios.app.chaletIn.Home_page">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chela_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </android.support.v7.widget.RecyclerView>
+
+
 
 
 

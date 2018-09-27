@@ -1,6 +1,7 @@
 package com.iakstudios.app.chaletIn;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -136,6 +137,16 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
             getLocationPermission();
         }
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+        }
+    }
+
     /*switch method*/
     public void Services_provided()
     {
