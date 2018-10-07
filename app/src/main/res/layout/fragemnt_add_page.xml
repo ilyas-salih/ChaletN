@@ -161,10 +161,11 @@
                                 android:textSize="18dp" />
 
                             <EditText
+                                android:id="@+id/kitchenText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
                                 android:gravity="center"
+                                android:inputType="number"
                                 android:textColor="#000"
                                 android:textSize="16dp" />
 
@@ -191,10 +192,11 @@
                                 android:textSize="18dp" />
 
                             <EditText
+                                android:id="@+id/bathText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
                                 android:gravity="center"
+                                android:inputType="number"
                                 android:textColor="#000"
                                 android:textSize="16dp" />
 
@@ -221,10 +223,11 @@
                                 android:textSize="18dp" />
 
                             <EditText
+                                android:id="@+id/roomText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
                                 android:gravity="center"
+                                android:inputType="number"
                                 android:textColor="#000"
                                 android:textSize="16dp" />
 
@@ -250,10 +253,11 @@
                                 android:textSize="18dp" />
 
                             <EditText
+                                android:id="@+id/guestText"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:inputType="number"
                                 android:gravity="center"
+                                android:inputType="number"
                                 android:textColor="#000"
                                 android:textSize="16dp" />
 

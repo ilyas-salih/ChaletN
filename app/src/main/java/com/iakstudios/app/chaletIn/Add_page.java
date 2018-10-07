@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -23,6 +24,8 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -48,20 +51,31 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.iakstudios.app.chaletIn.Model.ChaletInfo;
 import com.iakstudios.app.chaletIn.Model.PlaceInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class Add_page extends Fragment implements OnMapReadyCallback,
-        GoogleApiClient.OnConnectionFailedListener{
+        GoogleApiClient.OnConnectionFailedListener {
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
     /*Now our map is ready*/
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -105,35 +119,62 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
     private PlaceAutocompleteAdapter mPlaceAutocompleteAdapter;
     private GoogleApiClient mGoogleApiClient;
     private PlaceInfo mPlace;
+    private double chaletLatitude, chaletLongitude;
+    private String status_bed, status_sofa, status_refg, status_swim, status_play;
+    private String img1Address, img2Address, img3Address, img4Address;
+    private EditText priceField, cardTypeField, guestNoField, bathNoField, kitchenNoField, roomNoField, descField;
+    private ImageView image1, image2, image3, image4;
+    private int Gallery_Intent = 2;
+    private int imgNo = 0;
 
+    private DatabaseReference chaletInfo;
+    private StorageReference chaletImages;
+    private StorageReference imgStorage;
 
     //widgets
     private AutoCompleteTextView mSearchText;
-    Switch bed_sw,sofa_sw,refg_sw,swim_sw,play_sw;
-   TextView btn_upload;
+    Switch bed_sw, sofa_sw, refg_sw, swim_sw, play_sw;
+    TextView btn_upload;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragemnt_add_page,null,false);
-        return  view;
+        View view = inflater.inflate(R.layout.fragemnt_add_page, null, false);
+        return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mSearchText = (AutoCompleteTextView) view.findViewById(R.id.input_search);
-        bed_sw=view.findViewById(R.id.bed_con_switch);
-        sofa_sw=view.findViewById(R.id.sofa_con_switch);
-        refg_sw=view.findViewById(R.id.refrig_switch);
-        swim_sw=view.findViewById(R.id.swim_switch);
-        play_sw=view.findViewById(R.id.play_switch);
-        btn_upload=view.findViewById(R.id.button_upload);
+        bed_sw = view.findViewById(R.id.bed_con_switch);
+        sofa_sw = view.findViewById(R.id.sofa_con_switch);
+        refg_sw = view.findViewById(R.id.refrig_switch);
+        swim_sw = view.findViewById(R.id.swim_switch);
+        play_sw = view.findViewById(R.id.play_switch);
+        btn_upload = view.findViewById(R.id.button_upload);
+
+        priceField = view.findViewById(R.id.price_ifno);
+        cardTypeField = view.findViewById(R.id.card_info);
+        guestNoField = view.findViewById(R.id.guestText);
+        roomNoField = view.findViewById(R.id.roomText);
+        bathNoField = view.findViewById(R.id.bathText);
+        kitchenNoField = view.findViewById(R.id.kitchenText);
+        descField = view.findViewById(R.id.descmore_txt);
+
+        image1 = view.findViewById(R.id.photo_1);
+        image2 = view.findViewById(R.id.photo_2);
+        image3 = view.findViewById(R.id.photo_3);
+        image4 = view.findViewById(R.id.photo_4);
+
+        chaletInfo = FirebaseDatabase.getInstance().getReference("Chalets");
+        //chaletImages = FirebaseStorage.getInstance().getReference();
+        imgStorage = FirebaseStorage.getInstance().getReference();
+
         Services_provided();
 
-        if(isServicesOK())
-        {
+        if (isServicesOK()) {
             getLocationPermission();
         }
     }
@@ -148,77 +189,99 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
     }
 
     /*switch method*/
-    public void Services_provided()
-    {
+    public void Services_provided() {
 
         btn_upload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String status_bed, status_sofa,status_refg,status_swim,status_play;
-                if (bed_sw.isChecked())
-                {
-                    status_bed= bed_sw.getTextOn().toString();
+
+                if (bed_sw.isChecked()) {
+                    status_bed = bed_sw.getTextOn().toString();
+                } else {
+                    status_bed = bed_sw.getTextOff().toString();
                 }
-                else
-                {
-                    status_bed= bed_sw.getTextOff().toString();
+                if (sofa_sw.isChecked()) {
+                    status_sofa = sofa_sw.getTextOn().toString();
+                } else {
+                    status_sofa = sofa_sw.getTextOff().toString();
                 }
-                if (sofa_sw.isChecked())
-                {
-                    status_sofa= sofa_sw.getTextOn().toString();
+                if (refg_sw.isChecked()) {
+                    status_refg = refg_sw.getTextOn().toString();
+                } else {
+                    status_refg = refg_sw.getTextOff().toString();
                 }
-                else
-                {
-                    status_sofa= sofa_sw.getTextOff().toString();
+                if (swim_sw.isChecked()) {
+                    status_swim = swim_sw.getTextOn().toString();
+                } else {
+                    status_swim = swim_sw.getTextOff().toString();
                 }
-                if (refg_sw.isChecked())
-                {
-                    status_refg= refg_sw.getTextOn().toString();
-                }
-                else
-                {
-                    status_refg= refg_sw.getTextOff().toString();
-                }
-                if (swim_sw.isChecked())
-                {
-                    status_swim= swim_sw.getTextOn().toString();
-                }
-                else
-                {
-                    status_swim= swim_sw.getTextOff().toString();
-                }
-                if (play_sw.isChecked())
-                {
-                    status_play= play_sw.getTextOn().toString();
-                }
-                else
-                {
-                    status_play= play_sw.getTextOff().toString();
+                if (play_sw.isChecked()) {
+                    status_play = play_sw.getTextOn().toString();
+                } else {
+                    status_play = play_sw.getTextOff().toString();
                 }
 
-             Toast.makeText(getActivity(),status_bed+" "+status_sofa,Toast.LENGTH_LONG).show();
+
+                Toast.makeText(getActivity(), status_bed + " " + status_sofa, Toast.LENGTH_LONG).show();
+
+                storeToDatabase();
             }
         });
 
+        image1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Entered image 1", Toast.LENGTH_LONG).show();
+                imageChooser();
+                imgNo = 1;
+            }
+        });
+
+        image2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Entered image 2", Toast.LENGTH_LONG).show();
+                imageChooser();
+                imgNo = 2;
+            }
+        });
+
+        image3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Entered image 3", Toast.LENGTH_LONG).show();
+                imageChooser();
+                imgNo = 3;
+            }
+        });
+
+        image4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getActivity(), "Entered image 4", Toast.LENGTH_LONG).show();
+                imageChooser();
+                imgNo = 4;
+            }
+        });
 
     }
+
     /*here to check if the user use the right version of map*/
-    public boolean isServicesOK(){
+    public boolean isServicesOK() {
         Log.d(TAG, "isServicesOK: checking google services version");
 
         int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getActivity());
 
-        if(available == ConnectionResult.SUCCESS){
+        if (available == ConnectionResult.SUCCESS) {
             //everything is fine and the user can make map requests
             Log.d(TAG, "isServicesOK: Google Play Services is working");
             return true;
-        }
-        else if(GoogleApiAvailability.getInstance().isUserResolvableError(available)){
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //an error occured but we can resolve it
             Log.d(TAG, "isServicesOK: an error occured but we can fix it");
             Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(getActivity(), available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else{
+        } else {
             Toast.makeText(getActivity(), "You can't make map requests", Toast.LENGTH_SHORT).show();
         }
         return false;
@@ -261,7 +324,7 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
     }
 
     /*initialize our map*/
-    private void initMap(){
+    private void initMap() {
         Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) this.getChildFragmentManager()
                 .findFragmentById(R.id.map);
@@ -271,23 +334,23 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
     }
 
 
-    private void getLocationPermission(){
+    private void getLocationPermission() {
         Log.d(TAG, "getLocationPermission: getting location permissions");
         String[] permissions = {Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(getActivity().getApplicationContext(),
+                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                 mLocationPermissionsGranted = true;
                 initMap();
-            }else{
+            } else {
                 ActivityCompat.requestPermissions(getActivity(),
                         permissions,
                         LOCATION_PERMISSION_REQUEST_CODE);
             }
-        }else{
+        } else {
             ActivityCompat.requestPermissions(getActivity(),
                     permissions,
                     LOCATION_PERMISSION_REQUEST_CODE);
@@ -299,11 +362,11 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
         Log.d(TAG, "onRequestPermissionsResult: called.");
         mLocationPermissionsGranted = false;
 
-        switch(requestCode){
-            case LOCATION_PERMISSION_REQUEST_CODE:{
-                if(grantResults.length > 0){
-                    for(int i = 0; i < grantResults.length; i++){
-                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
+        switch (requestCode) {
+            case LOCATION_PERMISSION_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int i = 0; i < grantResults.length; i++) {
+                        if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
                             mLocationPermissionsGranted = false;
                             Log.d(TAG, "onRequestPermissionsResult: permission failed");
                             return;
@@ -321,56 +384,56 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
 
 
     /*get the device location*/
-    private void getDeviceLocation(){
+    private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
-        try{
-            if(mLocationPermissionsGranted){
+        try {
+            if (mLocationPermissionsGranted) {
 
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
-                        if(task.isSuccessful()&& task.getResult() != null){
+                        if (task.isSuccessful() && task.getResult() != null) {
                             Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
 
                             /*the current location of the user when first time open the app*/
-                            double latitud=currentLocation.getLatitude();
-                            double longitud=currentLocation.getLongitude();
-                            Log.d("abod",latitud+" "+longitud);
-                            moveCamera(new LatLng(latitud,longitud),
-                                    DEFAULT_ZOOM," ");
+                            double latitud = currentLocation.getLatitude();
+                            double longitud = currentLocation.getLongitude();
+                            Log.d("abod", latitud + " " + longitud);
+                            moveCamera(new LatLng(latitud, longitud),
+                                    DEFAULT_ZOOM, " ");
 
-                        }else{
+                        } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(getActivity(), "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
-        }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
+        } catch (SecurityException e) {
+            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
     }
 
     /*will be calling to search my location*/
-    private void geoLocate(){
+    private void geoLocate() {
         Log.d(TAG, "geoLocate: geolocating");
 
         String searchString = mSearchText.getText().toString();
 
         Geocoder geocoder = new Geocoder(getActivity());
         List<Address> list = new ArrayList<>();
-        try{
+        try {
             list = geocoder.getFromLocationName(searchString, 1);
-        }catch (IOException e){
-            Log.e(TAG, "geoLocate: IOException: " + e.getMessage() );
+        } catch (IOException e) {
+            Log.e(TAG, "geoLocate: IOException: " + e.getMessage());
         }
 
-        if(list.size() > 0){
+        if (list.size() > 0) {
             Address address = list.get(0);
 
             Log.d(TAG, "geoLocate: found a location: " + address.toString());
@@ -382,11 +445,9 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
     }
 
 
-
-
     /*move the blu circle where i stand now*/
-    private void moveCamera(LatLng latLng, float zoom,String markers){
-        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude );
+    private void moveCamera(LatLng latLng, float zoom, String markers) {
+        Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         /*this for the red marker */
@@ -418,14 +479,14 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
     private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback = new ResultCallback<PlaceBuffer>() {
         @Override
         public void onResult(@NonNull PlaceBuffer places) {
-            if(!places.getStatus().isSuccess()){
+            if (!places.getStatus().isSuccess()) {
                 Log.d(TAG, "onResult: Place query did not complete successfully: " + places.getStatus().toString());
                 places.release();
                 return;
             }
             final Place place = places.get(0);
 
-            try{
+            try {
                 mPlace = new PlaceInfo();
                 mPlace.setName(place.getName().toString());
                 Log.d(TAG, "onResult: name: " + place.getName());
@@ -438,22 +499,90 @@ public class Add_page extends Fragment implements OnMapReadyCallback,
 
 
                 Log.d(TAG, "onResult: place: " + mPlace.toString());
-            }catch (NullPointerException e){
-                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage() );
+            } catch (NullPointerException e) {
+                Log.e(TAG, "onResult: NullPointerException: " + e.getMessage());
             }
 
             moveCamera(new LatLng(place.getViewport().getCenter().latitude,
                     place.getViewport().getCenter().longitude), DEFAULT_ZOOM, mPlace.getName());
 
             /*if the user search the current location will be here, this for u ilyas*/
-//            double lattitude=place.getViewport().getCenter().latitude;
-//            double lnogtatude=place.getViewport().getCenter().longitude;
+            chaletLatitude = place.getViewport().getCenter().latitude;
+            chaletLongitude = place.getViewport().getCenter().longitude;
 
             places.release();
         }
     };
 
-                           /*----------------------------Here start coding fot other features in the layout-------------------------------*/
+    /*----------------------------Here start coding fot other features in the layout-------------------------------*/
 
+    public void imageChooser() {
+        Intent imgPicker = new Intent(Intent.ACTION_PICK);
+        imgPicker.setType("image/*");
+        startActivityForResult(imgPicker, Gallery_Intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Gallery_Intent && resultCode == RESULT_OK) {
+            // Data from gallery
+            Uri uri = data.getData();
+            chaletImages = imgStorage.child("Chalet Images").child(uri.getLastPathSegment());
+            chaletImages.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Toast.makeText(getActivity(), "Image Uploaded", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getActivity(), "Image Not Uploaded", Toast.LENGTH_SHORT).show();
+                }
+            });
+            if (imgNo == 1) {
+                image1.setImageURI(uri);
+                img1Address = uri.getLastPathSegment();
+            } else if (imgNo == 2) {
+                image2.setImageURI(uri);
+                img2Address = uri.getLastPathSegment();
+            } else if (imgNo == 3) {
+                image3.setImageURI(uri);
+                img3Address = uri.getLastPathSegment();
+            } else if (imgNo == 4){
+                image4.setImageURI(uri);
+                img4Address = uri.getLastPathSegment();
+            }
+
+
+        }
+
+    }
+
+    public void storeToDatabase() {
+        String price, cardType, guestNo, bathNo, kitchenNo, roomNo, desc;
+        price = priceField.getText().toString().trim();
+        cardType = cardTypeField.getText().toString().trim();
+        guestNo = guestNoField.getText().toString().trim();
+        bathNo = bathNoField.getText().toString().trim();
+        kitchenNo = kitchenNoField.getText().toString().trim();
+        roomNo = roomNoField.getText().toString().trim();
+        desc = descField.getText().toString();
+
+        if (chaletLatitude == 0 && chaletLongitude == 0) {
+            mSearchText.setError("Please choose a location");
+            mSearchText.requestFocus();
+            return;
+        }
+
+        String chaletID = chaletInfo.push().getKey();
+
+        ChaletInfo chaletObj = new ChaletInfo(chaletID, price, cardType, guestNo, roomNo, bathNo, kitchenNo, desc, status_play, status_bed, status_refg, status_swim, status_sofa, chaletLatitude, chaletLongitude, img1Address, img2Address, img3Address, img4Address);
+        chaletInfo.child(chaletID).setValue(chaletObj);
+        Toast.makeText(getActivity(), "Chalet Added", Toast.LENGTH_SHORT).show();
+
+    }
 
 }
+
+
